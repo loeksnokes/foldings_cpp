@@ -1,0 +1,32 @@
+[
+{
+  "directory": "/Users/cb211/code/foldings_cpp/build",
+  "command": "/usr/bin/clang++  -I/Users/cb211/code/foldings_cpp/include -g -std=gnu++11 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -mmacosx-version-min=12.7 -o CMakeFiles/foldings_cpp.dir/src/digraph.cpp.o -c /Users/cb211/code/foldings_cpp/src/digraph.cpp",
+  "file": "/Users/cb211/code/foldings_cpp/src/digraph.cpp",
+  "output": "CMakeFiles/foldings_cpp.dir/src/digraph.cpp.o"
+},
+{
+  "directory": "/Users/cb211/code/foldings_cpp/build",
+  "command": "/usr/bin/clang++  -I/Users/cb211/code/foldings_cpp/include -g -std=gnu++11 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -mmacosx-version-min=12.7 -o CMakeFiles/foldings_cpp.dir/src/foldings.cpp.o -c /Users/cb211/code/foldings_cpp/src/foldings.cpp",
+  "file": "/Users/cb211/code/foldings_cpp/src/foldings.cpp",
+  "output": "CMakeFiles/foldings_cpp.dir/src/foldings.cpp.o"
+},
+{
+  "directory": "/Users/cb211/code/foldings_cpp/build",
+  "command": "/usr/bin/clang++  -I/Users/cb211/code/foldings_cpp/include -g -std=gnu++11 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -mmacosx-version-min=12.7 -o CMakeFiles/foldings_cpp.dir/src/ggraph.cpp.o -c /Users/cb211/code/foldings_cpp/src/ggraph.cpp",
+  "file": "/Users/cb211/code/foldings_cpp/src/ggraph.cpp",
+  "output": "CMakeFiles/foldings_cpp.dir/src/ggraph.cpp.o"
+},
+{
+  "directory": "/Users/cb211/code/foldings_cpp/build",
+  "command": "/usr/bin/clang++  -I/Users/cb211/code/foldings_cpp/include -g -std=gnu++11 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -mmacosx-version-min=12.7 -o CMakeFiles/foldings_cpp.dir/src/graph.cpp.o -c /Users/cb211/code/foldings_cpp/src/graph.cpp",
+  "file": "/Users/cb211/code/foldings_cpp/src/graph.cpp",
+  "output": "CMakeFiles/foldings_cpp.dir/src/graph.cpp.o"
+},
+{
+  "directory": "/Users/cb211/code/foldings_cpp/build",
+  "command": "/usr/bin/clang++  -I/Users/cb211/code/foldings_cpp/include -g -std=gnu++11 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -mmacosx-version-min=12.7 -o CMakeFiles/foldings_cpp.dir/src/main.cpp.o -c /Users/cb211/code/foldings_cpp/src/main.cpp",
+  "file": "/Users/cb211/code/foldings_cpp/src/main.cpp",
+  "output": "CMakeFiles/foldings_cpp.dir/src/main.cpp.o"
+}
+]

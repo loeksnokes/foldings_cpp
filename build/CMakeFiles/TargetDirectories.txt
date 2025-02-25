@@ -1,0 +1,3 @@
+/Users/cb211/code/foldings_cpp/build/CMakeFiles/foldings_cpp.dir
+/Users/cb211/code/foldings_cpp/build/CMakeFiles/edit_cache.dir
+/Users/cb211/code/foldings_cpp/build/CMakeFiles/rebuild_cache.dir
