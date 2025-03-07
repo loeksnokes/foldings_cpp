@@ -56,6 +56,21 @@ bool Graph::areAdjacent(const std::shared_ptr<Vertex> v1, const std::shared_ptr<
     return false;
 }
 
+bool Graph::containsVertex(const std::shared_ptr<Vertex> v) const {
+    return vertices.find(v) != vertices.end();
+}
+
+const std::vector<std::shared_ptr<Vertex>>& Graph::getNeighbors(const std::shared_ptr<Vertex> v) const {
+    auto it = adjacencyList.find(v);
+    if (it != adjacencyList.end()) {
+        return it->second;
+    } else {
+        // Return an empty vector if the vertex is not in the adjacency list
+        static const std::vector<std::shared_ptr<Vertex>> emptyVector;
+        return emptyVector;
+    }
+}
+
 void Vertex::roll(int symbol, std::set<std::string>& rolledKmers) const {
     if (symbol < 0 || symbol > 9) {
         return;

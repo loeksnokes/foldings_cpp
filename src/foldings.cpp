@@ -10,15 +10,21 @@
 #include <queue>
 
 // Function to merge two vertices and create a new vertex
-Vertex* mergeVertices(Graph& g, Vertex* v1, Vertex* v2) {
-    Vertex* mergedVertex = new Vertex();
+std::shared_ptr<Vertex> mergeVertices(Graph& g, std::shared_ptr<Vertex> v1, std::shared_ptr<Vertex> v2) {
+
+    // Verify these two vertices currently belong to the graph.
+    if (g.getVertices().find(v1) == g.getVertices().end() || g.getVertices().find(v2) == g.getVertices().end()) {
+        return nullptr;
+    }
+
+    auto mergedVertex = std::make_shared<Vertex>();
 
     // Combine the string sets of v1 and v2
-    for (const auto& str : v1->stringsSet) {
-        mergedVertex->addString(str.first);
+    for (const auto& str : v1->getKmers()) {
+        mergedVertex->addString(str);
     }
-    for (const auto& str : v2->stringsSet) {
-        mergedVertex->addString(str.first);
+    for (const auto& str : v2->getKmers()) {
+        mergedVertex->addString(str);
     }
 
     // Add the merged vertex to the graph
@@ -28,20 +34,20 @@ Vertex* mergeVertices(Graph& g, Vertex* v1, Vertex* v2) {
 }
 
 // Function to fold the graph by merging vertices p and q
-Graph fold(Graph& graph, Vertex* p, Vertex* q) {
-    Graph foldedGraph;
+Graph fold(Graph& graph, std::shared_ptr<Vertex> p, std::shared_ptr<Vertex> q) {
+    Graph foldedGraph(graph.getK(), graph.getK());
 
     // Initialize the queue with the initial pair (p, q)
-    std::queue<std::pair<Vertex*, Vertex*>> queue;
+    std::queue<std::pair<std::shared_ptr<Vertex>, std::shared_ptr<Vertex>>> queue;
     queue.push({p, q});
-    std::map<Vertex*, Vertex*> processed;
+    std::map<std::shared_ptr<Vertex>, std::shared_ptr<Vertex>> processed;
 
     while (!queue.empty()) {
         auto pair = queue.front();
         queue.pop();
 
-        Vertex* v1 = pair.first;
-        Vertex* v2 = pair.second;
+        std::shared_ptr<Vertex> v1 = pair.first;
+        std::shared_ptr<Vertex> v2 = pair.second;
 
         // If either vertex has already been processed, skip
         if (processed.count(v1)) {
@@ -54,20 +60,42 @@ Graph fold(Graph& graph, Vertex* p, Vertex* q) {
         }
 
         // Merge the two vertices
-        Vertex* mergedVertex = mergeVertices(foldedGraph, v1, v2);
+        std::shared_ptr<Vertex> mergedVertex = mergeVertices(foldedGraph, v1, v2);
 
         // Register the merged vertex in the processed map
         processed[v1] = mergedVertex;
         processed[v2] = mergedVertex;
 
         // Propagate the identification through the graph
-        for (const auto& str : v1->stringsSet) {
-            for (const auto& char : "01") {
-                if (str.first.length() > 1) {
-                    std::string uPrime = str.first.substr(1) + char;
-                    if (v1->containsString(uPrime) && v2->containsString(uPrime)) {
-                        Vertex* uVertex = findVertexContainingString(graph, uPrime);
-                        Vertex* vVertex = findVertexContainingString(graph, uPrime);
+        for (const auto& str : v1->getKmers()) {
+            for (const auto& charr : graph.getAlphabet()) {
+                if (str.length() > 1) {
+                    std::string uPrime = str.substr(1) + charr;
+                    bool v1Contains = false;
+                    bool v2Contains = false;
+                    for (const auto& v : graph.getVertices()) {
+                        if (v->containsString(uPrime)) {
+                            v1Contains = true;
+                        }
+                    }
+                    for (const auto& v : graph.getVertices()) {
+                        if (v->containsString(uPrime)) {
+                            v2Contains = true;
+                        }
+                    }
+                    std::shared_ptr<Vertex> uVertex;
+                    std::shared_ptr<Vertex> vVertex;
+                    for (const auto& v : graph.getVertices()) {
+                        if (v->containsString(uPrime)) {
+                            uVertex = v;
+                        }
+                    }
+                    for (const auto& v : graph.getVertices()) {
+                        if (v->containsString(uPrime)) {
+                            vVertex = v;
+                        }
+                    }
+                    if (v1Contains && v2Contains) {
                         queue.push({uVertex, vVertex});
                     }
                 }
@@ -76,10 +104,10 @@ Graph fold(Graph& graph, Vertex* p, Vertex* q) {
     }
 
     // Redirect edges and add them to the folded graph
-    for (const auto& src : graph.adjacencyList) {
-        Vertex* mergedSrc = processed[src.first];
-        for (const auto& dst : src.second) {
-            Vertex* mergedDst = processed[dst];
+    for (const auto& srcVertex : graph.getVertices()) {
+        std::shared_ptr<Vertex> mergedSrc = processed[srcVertex];
+        for (const auto& dst : graph.getNeighbors(srcVertex)) {
+            std::shared_ptr<Vertex> mergedDst = processed[dst];
             if (mergedSrc && mergedDst) {
                 foldedGraph.addEdge(mergedSrc, mergedDst);
             }
@@ -87,8 +115,8 @@ Graph fold(Graph& graph, Vertex* p, Vertex* q) {
     }
 
     // Remove the original vertices p and q from the graph G
-    foldedGraph.removeVertex(p);
-    foldedGraph.removeVertex(q);
+    //foldedGraph.removeVertex(p);
+    //foldedGraph.removeVertex(q);
 
     return foldedGraph;
 }
