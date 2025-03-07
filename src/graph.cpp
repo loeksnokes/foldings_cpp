@@ -1,46 +1,72 @@
 #include "graph.hpp"
+
 #include <algorithm>
 
-Vertex::Vertex() {
-    stringsSet = std::unordered_set<std::string>();
-}
+Vertex::Vertex() {}
 
 void Vertex::addString(const std::string& s) {
     stringsSet.insert(s);
 }
 
 bool Vertex::containsString(const std::string& s) const {
-    return stringsSet.find(s) != stringsSet.end();
+    return stringsSet.count(s) > 0;
 }
 
-Graph::Graph() {
-    adjacencyList = std::unordered_map<Vertex*, std::vector<Vertex*>>();
-    vertices = std::vector<Vertex*>();
-}
-
-void Graph::addVertex(Vertex* v) {
-    vertices.push_back(v);
-    adjacencyList[v] = std::vector<Vertex*>();
-}
-
-void Graph::addEdge(Vertex* src, Vertex* dst) {
-    adjacencyList[src].push_back(dst);
-}
-
-void Graph::removeVertex(Vertex* v) {
-    adjacencyList.erase(v);
-    vertices.erase(std::remove(vertices.begin(), vertices.end(), v), vertices.end());
-
-    for (auto& pair : adjacencyList) {
-        auto& dests = pair.second;
-        dests.erase(std::remove(dests.begin(), dests.end(), v), dests.end());
+bool Vertex::operator<(const Vertex& other) const {
+    // Compare based on the smallest string in each set
+    if (stringsSet.empty() && other.stringsSet.empty()) {
+        return false; // Both are empty, so they are equal
     }
+    if (stringsSet.empty()) {
+        return true; // This vertex is empty, the other is not, so this is smaller
+    }
+    if (other.stringsSet.empty()) {
+        return false; // Other vertex is empty, this is not, so this is larger
+    }
+
+    auto it1 = stringsSet.begin();
+    auto it2 = other.stringsSet.begin();
+    return *it1 < *it2;
 }
 
-std::vector<std::string> Graph::gVertStrings(Vertex* v) const {
-    std::vector<std::string> keys;
-    for (const auto& str : v->stringsSet) {
-        keys.push_back(str);
+bool Vertex::operator==(const Vertex& other) const {
+    return stringsSet == other.stringsSet;
+}
+
+Graph::Graph(int k, int n) : kmerLength(k), alphabetSize(n) {}
+
+void Graph::addVertex(std::shared_ptr<Vertex> v) {
+    vertices.insert(v);
+}
+
+void Graph::addEdge(std::shared_ptr<Vertex> v1, std::shared_ptr<Vertex> v2) {
+    adjacencyList[v1].push_back(v2);
+}
+
+bool Graph::areAdjacent(const std::shared_ptr<Vertex> v1, const std::shared_ptr<Vertex> v2) const {
+    auto it = adjacencyList.find(v1);
+    if (it != adjacencyList.end()) {
+        const auto& neighbors = it->second;
+        for (const auto& neighbor : neighbors) {
+            if (neighbor == v2) {
+                return true;
+            }
+        }
     }
-    return keys;
+    return false;
+}
+
+void Vertex::roll(int symbol, std::set<std::string>& rolledKmers) const {
+    if (symbol < 0 || symbol > 9) {
+        return;
+    }
+    char c = '0' + symbol;
+     for (const auto& kmer : stringsSet) {
+            std::string newKmer = kmer.substr(1) + c; // Roll the k-mer
+            rolledKmers.insert(newKmer);
+        }
+}
+
+std::set<std::string> Vertex::getKmers() const {
+    return stringsSet;
 }
